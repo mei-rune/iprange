@@ -38,6 +38,11 @@ func (self *ipSegments) In(s string) bool {
 	if nil == ip {
 		return false
 	}
+	
+	return self.InAddr(ip)
+}
+
+func (self *ipSegments) InAddr(ip net.IP) bool {
 	ip = ip.To4()
 	if ip == nil {
 		return false
@@ -135,8 +140,13 @@ func (ranges Ranges) String() string {
 }
 
 func (ranges Ranges) In(s string) bool {
+	ip := net.ParseIP(s)
+	return ranges.InAddr(ip)
+}
+
+func (ranges Ranges) InAddr(ip net.IP) bool {
 	for _, ra := range ranges {
-		if ra.In(s) {
+		if ra.InAddr(ip) {
 			return true
 		}
 	}
