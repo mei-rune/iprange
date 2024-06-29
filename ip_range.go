@@ -18,12 +18,16 @@ type Iterable interface {
 	Iterable() Iterator
 }
 
-type Range interface {
-	Iterable
-
+type Checker interface {
 	String() string
 	In(ip string) bool
 	InAddr(ip net.IP) bool
+}
+
+type Range interface {
+	Iterable
+
+	Checker
 }
 
 type AllRange struct{}
