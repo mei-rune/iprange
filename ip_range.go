@@ -70,6 +70,10 @@ func (self *IPRange) In(ip string) bool {
 }
 
 func (self *IPRange) InAddr(ip net.IP) bool {
+	ip = ip.To4()
+	if ip == nil {
+		return false
+	}
 	i := binary.BigEndian.Uint32(ip.To4())
 	if 0 == i {
 		return false
