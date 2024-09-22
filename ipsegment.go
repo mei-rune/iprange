@@ -39,10 +39,10 @@ func (self *ipSegments) In(s string) bool {
 		return false
 	}
 	
-	return self.InAddr(ip)
+	return self.Contains(ip)
 }
 
-func (self *ipSegments) InAddr(ip net.IP) bool {
+func (self *ipSegments) Contains(ip net.IP) bool {
 	if ip == nil {
 		return false
 	}
@@ -144,15 +144,15 @@ func (ranges Ranges) String() string {
 
 func (ranges Ranges) In(s string) bool {
 	ip := net.ParseIP(s)
-	return ranges.InAddr(ip)
+	return ranges.Contains(ip)
 }
 
-func (ranges Ranges) InAddr(ip net.IP) bool {
+func (ranges Ranges) Contains(ip net.IP) bool {
 	if ip == nil {
 		return false
 	}
 	for _, ra := range ranges {
-		if ra.InAddr(ip) {
+		if ra.Contains(ip) {
 			return true
 		}
 	}

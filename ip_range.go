@@ -21,7 +21,7 @@ type Iterable interface {
 type Checker interface {
 	String() string
 	In(ip string) bool
-	InAddr(ip net.IP) bool
+	Contains(ip net.IP) bool
 }
 
 type Range interface {
@@ -44,7 +44,7 @@ func (all AllRange) In(ip string) bool {
 	return true
 }
 
-func (all AllRange) InAddr(ip net.IP) bool {
+func (all AllRange) Contains(ip net.IP) bool {
 	return true
 }
 
@@ -73,7 +73,7 @@ func (self *IPRange) In(ip string) bool {
 	return self.start <= i && i <= self.end
 }
 
-func (self *IPRange) InAddr(ip net.IP) bool {
+func (self *IPRange) Contains(ip net.IP) bool {
 	ip = ip.To4()
 	if ip == nil {
 		return false
@@ -143,7 +143,7 @@ func (self *SingleIP) In(ip string) bool {
 	return self.Addr.Equal(i)
 }
 
-func (self *SingleIP) InAddr(ip net.IP) bool {
+func (self *SingleIP) Contains(ip net.IP) bool {
 	return self.Addr.Equal(ip)
 }
 
@@ -196,7 +196,7 @@ func (self *IPCIDR) In(s string) bool {
 	return self.mask.Contains(ip)
 }
 
-func (self *IPCIDR) InAddr(ip net.IP) bool {
+func (self *IPCIDR) Contains(ip net.IP) bool {
 	return self.mask.Contains(ip)
 }
 
