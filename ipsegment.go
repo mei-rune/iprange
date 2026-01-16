@@ -38,7 +38,7 @@ func (self *ipSegments) In(s string) bool {
 	if nil == ip {
 		return false
 	}
-	
+
 	return self.Contains(ip)
 }
 
