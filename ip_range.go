@@ -259,6 +259,7 @@ func ParseIPRange(raw string, acceptAll ...bool) (Range, error) {
 
 	raList := make([]Range, 0, len(ss))
 	for _, s := range ss {
+		s = strings.TrimSpace(s)
 		if s == "" {
 			continue
 		}
@@ -267,10 +268,6 @@ func ParseIPRange(raw string, acceptAll ...bool) (Range, error) {
 				return AllRange{}, nil
 			}
 			return nil, errors.New("syntex error: please input corrent sytex, such 'xxx.xxx.xxx.xxx-yyy.yyy.yyy.yyy - '" + raw + "'")
-		}
-		s = strings.TrimSpace(s)
-		if s == "" {
-			continue
 		}
 
 		ra, err := parseIPRange(s)
@@ -350,8 +347,8 @@ func parseIPRange(raw string) (Range, error) {
 		// ones, bits := ipNet.Mask.Size()
 		// end = start + (uint32(1) << uint32(bits-ones))
 	} else {
-		start = parseIPV4(fields[0])
-		end = parseIPV4(fields[1])
+		start = parseIPV4(strings.TrimSpace(fields[0]))
+		end = parseIPV4(strings.TrimSpace(fields[1]))
 	}
 	if 0 == start {
 		return nil, errors.New("start address is syntex error - '" + raw + "'")
