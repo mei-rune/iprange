@@ -90,7 +90,7 @@ var ip_test = []struct {
 	{"192.168.1.5-192.168.1.3", nil, "start address geater than end address - '192.168.1.5-192.168.1.3'", ""},
 	{"192.168.1.a-192.168.1.3", nil, "start address is syntex error - '192.168.1.a-192.168.1.3'", ""},
 	{"192.168.1.5-192.168.1.a", nil, "end address is syntex error - '192.168.1.5-192.168.1.a'", ""},
-	{"192.168.15", nil, "syntex error: please input corrent sytex, such 'xxx.xxx.xxx.xxx-yyy.yyy.yyy.yyy - '192.168.15'", ""},
+	{"192.168.15", nil, "syntex error: please input corrent sytex, such 'xxx.xxx.xxx.xxx-yyy.yyy.yyy.yyy', and got '192.168.15'", ""},
 }
 
 func TestIPRanage(t *testing.T) {

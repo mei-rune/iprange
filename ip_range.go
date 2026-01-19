@@ -24,6 +24,18 @@ type Checker interface {
 	Contains(ip net.IP) bool
 }
 
+type onlyChecker interface {
+ onlyCheck() bool
+}
+
+func IsOnlyCheck(r Range) bool {
+	c, ok := r.(onlyChecker)
+	if ok {
+		return c.onlyCheck()
+	}
+	return false
+}
+
 type Range interface {
 	Iterable
 
@@ -31,6 +43,10 @@ type Range interface {
 }
 
 type AllRange struct{}
+
+var _ onlyChecker = AllRange{}
+
+func (all AllRange) onlyCheck() bool { return true }
 
 func (all AllRange) Iterable() Iterator {
 	panic(errors.New("范围太大，无法枚举"))
@@ -184,6 +200,10 @@ type IPCIDR struct {
 	mask *net.IPNet
 }
 
+var _ onlyChecker = &IPCIDR{}
+
+func (self *IPCIDR) onlyCheck() bool { return true }
+
 func (self *IPCIDR) String() string {
 	return self.mask.String()
 }
@@ -201,6 +221,10 @@ func (self *IPCIDR) Contains(ip net.IP) bool {
 }
 
 func (self *IPCIDR) Iterable() Iterator {
+	if self.ip.To4() == nil {
+		panic(errors.New("syntex error: please input corrent sytex, cidr format of ipv6 is unsupported"))
+	}
+
 	start := binary.BigEndian.Uint32(self.mask.IP.To4())
 	ones, bits := self.mask.Mask.Size()
 	end := start + (uint32(1) << uint32(bits-ones))
@@ -332,11 +356,7 @@ func parseIPRange(raw string) (Range, error) {
 
 		ipa, ipNet, e := net.ParseCIDR(raw)
 		if nil != e {
-			return nil, errors.New("syntex error: please input corrent sytex, such 'xxx.xxx.xxx.xxx-yyy.yyy.yyy.yyy - '" + raw + "'")
-		}
-
-		if ipa.To4() == nil {
-			return nil, errors.New("syntex error: please input corrent sytex, such 'xxx.xxx.xxx.xxx-yyy.yyy.yyy.yyy - '" + raw + "'")
+			return nil, errors.New("syntex error: please input corrent sytex, such 'xxx.xxx.xxx.xxx-yyy.yyy.yyy.yyy', and got '" + raw + "'")
 		}
 
 		return &IPCIDR{

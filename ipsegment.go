@@ -131,6 +131,20 @@ func (self *ipSegmentIterator) Current() net.IP {
 
 type Ranges []Range
 
+func (ranges Ranges) onlyCheck() bool {
+	for _, r := range ranges {
+ 		 c, ok := r.(onlyChecker)
+ 		 if !ok {
+ 		 	continue
+ 		 }
+
+ 		 if c.onlyCheck() {
+ 		 	return true
+ 		 }
+	}
+	return false
+}
+
 func (ranges Ranges) String() string {
 	var sb strings.Builder
 	for idx := range ranges {
